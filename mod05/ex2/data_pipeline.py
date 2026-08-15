@@ -102,14 +102,15 @@ class LogProcessor(DataProcessor):
         for item in items:
             logEntry = ""
             for key in item.keys():
-                logEntry += f": {item[key]}"
+                logEntry += f"{item[key]}: "
+            logEntry = logEntry[:-2]
             self.buffer.append((self.count, logEntry))
             self.count += 1
 
 
 class DataStream:
     def __init__(self) -> None:
-        self._processors = []
+        self._processors: list[DataProcessor] = []
 
     def register_processor(self, proc: DataProcessor) -> None:
         try:
@@ -143,30 +144,27 @@ class DataStream:
                   )
 
     def output_pipeline(self, nb: int, plugin: ExportPlugin) -> None:
-        for _ in range(nb):
-            self.output()
-        
+        for proc in self._processors: 
+            data = []
+            for _ in range(nb):
+                try:
+                    data.append(proc.output())
+                except Exception:
+                    break
+            plugin.process_output(data)
 
 
 class ExportPlugin(Protocol):
-    buffer: list[str]
-
     def process_output(self, data: list[tuple[int, str]]) -> None:
         ...
 
-class ExportCSV(ExportPlugin):
-    def __init__(self):
-        self.buffer = []
-
+class ExportCSV:
     def process_output(self, data: list[tuple[int, str]]) -> None:
-        ...
-    
-class ExportJSON(ExportPlugin):
-    def __init__(self):
-        self.buffer = []
+        print(",".join(value for rank, value in data))
 
+class ExportJSON:
     def process_output(self, data: list[tuple[int, str]]) -> None:
-        ...
+    	print(" {" + ", ".join(f'item_{rank}: "{value}"' for rank, value in data) + "}")
 
 
 def main() -> None:
@@ -180,7 +178,7 @@ def main() -> None:
     print()
     batch = ["Hello World",
              [3.14, -1, 2.71],
-             [{"log_level": "Warning", "log_message": "Telnet access! "
+             [{"log_level": "WARNING", "log_message": "Telnet access! "
              "Use ssh instead"}, {"log_level": "INFO", "log_message":
                                  "User wil is connected"}],
              42,
@@ -197,6 +195,27 @@ def main() -> None:
     stream.process_stream(batch)
     stream.print_processors_stats()
     print()
+    stream.output_pipeline(3, ExportCSV())
+    print()
+    stream.print_processors_stats()
+    second_batch = [
+        21,
+        ["I love AI", "LLMs are wonderful", "Stay healthy"],
+        [{"log_level": "ERROR", "log_message": "500 server crash"},
+    	{"log_level": "NOTICE", "log_message": "Certificate expires in 10 days"}],
+        [32, 42, 64, 84, 128, 168],
+        "World hello"
+    ] 
+    print()
+    print(f"Send another batch of data: {second_batch}")
+    stream.process_stream(second_batch)
+    print()
+    stream.print_processors_stats()
+    print()
+    print(" Send 5 processed data from each processor to a JSON plugin:")
+    stream.output_pipeline(5, ExportJSON())
+    print()
+    stream.print_processors_stats()
     
 
 if __name__ == "__main__":
