@@ -4,13 +4,13 @@ from .elements import create_earth, create_air
 
 def healing_potion() -> str:
     return (
-            f"Healing potion brewed with '{create_earth()}'"
+            f"Healing potion brewed with '{create_earth()}' element "
             f"and '{create_air()}'"
     )
 
 
 def strength_potion() -> str:
     return (
-            f"Strength potion brewed with '{create_fire()}'"
+            f"Strength potion brewed with '{create_fire()}' "
             f"and '{create_water()}'"
     )

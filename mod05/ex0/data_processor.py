@@ -94,7 +94,6 @@ def NumericTest() -> None:
         print(f" Trying to validaput '{test}': {result}")
     print(f" Test invalid ingestion of string '{inputs[2]}' "
           "without prior validation:")
-    print(cast(str, inputs[2]))
     try:
         processor.ingest(cast(str, inputs[2]))
     except ValueError as error:
