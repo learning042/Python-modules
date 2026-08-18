@@ -11,11 +11,10 @@ def get_player_pos() -> tuple[float, float, float] | None:
              x, y, z = args.split(',')
         except (KeyboardInterrupt, EOFError) as e:
             print(f"Program interrupted: {e}")
-            return None 
+            return None
         except ValueError as e:
             print(f"Invalid Syntax")
             continue
-        
         try:
             coords = [x, y, z]
             for i in range(3):
@@ -45,7 +44,7 @@ def main() -> None:
     print(f"Get a first tuple: {first}")
     print(f"It includes: X={first[0]:.1f}, Y={first[1]:.1f}, Z={first[2]:.1f}")
     r1 = distance(first)
-    print(f"Distance to center: {r1:.4f}")
+   print(f"Distance to center: {r1:.4f}")
     print()
     print("Get a second set of coordinates")
     second = get_player_pos()
