@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from .creatures import Creature, Flameling, Pyrodon, Aquabub, Torragon
+from .creatures import Creature
+from ._creatures import Flameling, Pyrodon, Aquabub, Torragon
 
 
 class CreatureFactory(ABC):
