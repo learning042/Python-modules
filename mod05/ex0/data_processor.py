@@ -1,4 +1,4 @@
-from typing import Any, cast
+from typing import Any
 from abc import ABC, abstractmethod
 
 
@@ -85,21 +85,23 @@ class LogProcessor(DataProcessor):
 
 
 def NumericTest() -> None:
-    inputs = [42, "Hello", "foo", [1, 2, 3, 4, 5]]
+    test0 = 42
+    test1 = "hello"
+    test2 = "foo"
+    test3: list[int | float] = [1, 2, 3, 4, 5]
     processor = NumericProcessor()
     print("Testing Numeric Processor...")
 
-    for test in inputs:
-        result = processor.validate(test)
-        print(f" Trying to validaput '{test}': {result}")
-    print(f" Test invalid ingestion of string '{inputs[2]}' "
+    print(f" Trying to validaput '{test0}': {processor.validate(test0)}")
+    print(f" Trying to validaput '{test1}': {processor.validate(test1)}")
+    print(f" Test invalid ingestion of string '{test2}' "
           "without prior validation:")
     try:
-        processor.ingest(cast(str, inputs[2]))
+        processor.ingest(test2)
     except ValueError as error:
         print(f" Got exception: {error}")
-    print(f" Processing data: {inputs[3]}")
-    processor.ingest(cast(list[int | float], inputs[3]))
+    print(f" Processing data: {test3}")
+    processor.ingest(test3)
     print(" Extracting 3 values...")
     for _ in range(3):
         rank, value = processor.output()
@@ -107,33 +109,32 @@ def NumericTest() -> None:
 
 
 def TextTest() -> None:
-    inputs = [42, ["Hello", "Nexus", "World"]]
+    test0 = 42
+    test1 = ["Hello", "Nexus", "World"]
     processor = TextProcessor()
     print("Testing Text Processor...")
-    print(f" Trying to validate input {inputs[0]}: "
-          f"{processor.validate(inputs[0])}")
-    print(f" Processing data: {inputs[1]}")
+    print(f" Trying to validate input {test0}: "
+          f"{processor.validate(test0)}")
+    print(f" Processing data: {test1}")
     print(" Extracting 1 value...")
-    processor.ingest(cast(list[str], inputs[1]))
+    processor.ingest(test1)
     rank, value = processor.output()
     print(f" Text value {rank}: {value}")
 
 
 def LogTest() -> None:
-    inputs = [
-        "Hello",
-        [
-            {"log_level": "NOTICE", "log_message": "Connection to server"},
-            {"log_level": "ERROR", "log_message": "Unauthorized acess!!"}
-        ]
-        ]
+    test0 = "hello"
+    test1 = [
+                {"log_level": "NOTICE", "log_message": "Connection to server"},
+                {"log_level": "ERROR", "log_message": "Unauthorized acess!!"}
+            ]
     processor = LogProcessor()
     print("Testing Log Processor...")
-    print(f" Trying to validate input {inputs[0]}: "
-          f"{processor.validate(inputs[0])}")
-    print(f" Processing data: {inputs[1]}")
+    print(f" Trying to validate input {test0}: "
+          f"{processor.validate(test0)}")
+    print(f" Processing data: {test1}")
     print(" Extracting 2 values...")
-    processor.ingest(cast(dict[str, str], inputs[1]))
+    processor.ingest(test1)
     for i in range(2):
         rank, value = processor.output()
         print(f" Log entry {rank}: {value}")
