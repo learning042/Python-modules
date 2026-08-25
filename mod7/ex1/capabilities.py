@@ -4,7 +4,7 @@ from ex0.creatures import Creature
 
 class HealCapability(ABC):
     @abstractmethod
-    def heal(self, target: Creature | None) -> str:
+    def heal(self, target: Creature | None = None) -> str:
         ...
 
 
