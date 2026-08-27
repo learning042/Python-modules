@@ -1,36 +1,43 @@
 import sys
 
 
-def main() -> None:
-    print(" === Player Score Analytics ===")
-    argc = len(sys.argv)
-    if argc == 1:
-        print(" No scores provided. Usage: python3 "
-              "ft_score_analytics.py <score1> <score2> ...")
-        return
-    scores = []
-    for score_str in sys.argv[1:]:
+def atoi_list(data: list[str]) -> list[int]:
+    converted_data = []
+    for element in data:
         try:
-            score = int(score_str)
-            scores += [score]
-        except Exception:
-            print(f" Invalid parameter: '{score}'")
-    scores_len = len(scores)
-    if scores_len == 0:
-        print(" No scores provided. Usage: python3 "
-              "ft_score_analytics.py <score1> <score2> ...")
-        return
+            converted_data.append(int(element))
+        except ValueError:
+            print(f"Invalid parameter: '{element}'")
+    return converted_data
+
+
+def print_analytics(scores: list[int], total_players: int) -> None:
     total_score = sum(scores)
+    average_score = total_score / total_players
     high_score = max(scores)
     low_score = min(scores)
     score_range = high_score - low_score
-    print(f" Scores processed: {scores}")
-    print(f" Total players: {scores_len}")
-    print(f" Total score: {total_score}")
-    print(f" Average score: {total_score / scores_len:.1f}")
-    print(f" High score: {high_score}")
-    print(f" Low score: {low_score}")
-    print(f" Score range: {score_range}")
+    print(
+            f"Scores processed: {scores}\n"
+            f"Total players: {total_players}\n"
+            f"Total score: {total_score}\n"
+            f"Average score: {average_score}\n"
+            f"High score: {high_score}\n"
+            f"Low score: {low_score}\n"
+            f"Score range: {score_range}"
+
+    )
+
+
+def main() -> None:
+    print("=== Player Score Analytics ===")
+    scores = atoi_list(sys.argv[1:])
+    total_players = len(scores)
+    if not total_players:
+        print("No scores provided. Usage: python3" +
+              f"{sys.argv[0]}<score1> <score2> ...")
+        return
+    print_analytics(scores, total_players)
 
 
 if __name__ == "__main__":

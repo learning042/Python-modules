@@ -1,51 +1,68 @@
 import sys
 
 
-def create_inventory() -> dict[str, int]:
+def get_inventory(args: list[str]) -> dict[str, int]:
     inventory = {}
-    for pairs in sys.argv[1:]:
-        try:
-            pair = pairs.split(':')
-            if len(pair) != 2:
-                print(f" Error - invalid parameter '{pair[0]}'")
-                continue
-            if pair[0] in inventory:
-                print(f" Redundant item '{pair[0]}' - discarding")
-                continue
-            inventory[pair[0]] = int(pair[1])
-        except ValueError as e:
-            print(f" Quantity error for '{pair[0]}': {e}")
+    for arg in args:
+        item = arg.split(":")
+        if len(item) != 2:
+            print(f"Error - invalid parameter '{arg}'")
+            continue
+        key, value = item
+        key = key.strip()
+        value = value.strip()
+        if key in inventory:
+            print(f"Redundant item '{key}' - discarding")
+        else:
+            try:
+                inventory[key] = int(value)
+            except ValueError as error:
+                print(f"Quantity error for '{key}': {error}")
     return inventory
 
 
-def main() -> None:
-    print(" === Inventory System Analysis ===")
-    inventory = create_inventory()
-    if len(inventory) == 0:
-        print(" Empty inventory!")
-        return
-    print(f" Got inventory: {inventory}")
-    item_list = list(inventory.keys())
-    total_quant = sum(inventory.values())
-    inventory_len = len(inventory)
-    print(f" Item list: {item_list}")
-    print(f" Total quantity of the {inventory_len} items: {total_quant}")
-    for key in inventory:
-        percentage = round(inventory[key] * 100 / total_quant, 1)
-        print(f" Item {key} represents {percentage}%")
-    greatest = item_list[0]
-    for item in item_list:
-        if inventory[item] > inventory[greatest]:
-            greatest = item
-    print(f" Item most abundant: {greatest}"
-          f"with quantity {inventory[greatest]}")
-    least = item_list[0]
-    for item in item_list:
-        if inventory[least] > inventory[item]:
+def print_percentages(inventory: dict[str, int], total: int) -> None:
+    for item in inventory.keys():
+        percentage = 100 * inventory[item] / total
+        print(f"Item {item} represents: {percentage:.1f}%")
+
+
+def print_most_abundant(inventory: dict[str, int]) -> None:
+    items = list(inventory.keys())
+    most = items[0]
+    for item in items:
+        if inventory[item] > inventory[most]:
+            most = item
+    print(f"Item most abundant: {most} with quantity {inventory[most]}")
+
+
+def print_least_abundant(inventory: dict[str, int]) -> None:
+    items = list(inventory.keys())
+    least = items[0]
+    for item in items:
+        if inventory[item] < inventory[least]:
             least = item
-    print(f" Item least abundant: {least} with quantity {inventory[least]}")
+    print(f"Item least abundant: {least} with quantity {inventory[least]}")
+
+
+def main() -> None:
+    print("=== Inventory System Analysis ===")
+    inventory = get_inventory(sys.argv[1:])
+    size = len(inventory)
+    total = sum(inventory.values())
+    print(
+        f"Get inventory: {inventory}\n"
+        f"Item list: {list(inventory.keys())}\n"
+        f"Total quantity of the {size} items: {total}"
+    )
+    print_percentages(inventory, total)
+    if not size:
+        print("There isn't any items!")
+    else:
+        print_most_abundant(inventory)
+        print_least_abundant(inventory)
     inventory.update({"magic_item": 1})
-    print(f" Updated inventory: {inventory}")
+    print(f"Updated inventory: {inventory}")
 
 
 if __name__ == "__main__":
