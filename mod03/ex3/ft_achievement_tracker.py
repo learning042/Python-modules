@@ -60,15 +60,15 @@ def print_unique_achievements(players: list[Player]) -> None:
     for player in players:
         achs = player.get_achievements()
         unique = achs.difference(*(
-                                 another.get_achievements()
-                                 for another in players
-                                 if another is not player
+                                 other.get_achievements()
+                                 for other in players
+                                 if other is not player
                                  ))
         print(f"Only {player.get_name()} has: {unique}")
 
 
 def print_common_achievements(players: list[Player]) -> None:
-    common = players[0].get_achievements().intersection(
+    common = set.intersection(
             *(player.get_achievements() for player in players)
             )
     print(f"Common achievements: {common}")

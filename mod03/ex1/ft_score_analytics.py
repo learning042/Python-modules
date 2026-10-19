@@ -34,8 +34,8 @@ def main() -> None:
     scores = atoi_list(sys.argv[1:])
     total_players = len(scores)
     if not total_players:
-        print("No scores provided. Usage: python3" +
-              f"{sys.argv[0]}<score1> <score2> ...")
+        print("No scores provided. Usage: python3 "
+              f"{sys.argv[0]} <score1> <score2> ...")
         return
     print_analytics(scores, total_players)
 
