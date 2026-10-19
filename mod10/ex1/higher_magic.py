@@ -1,5 +1,6 @@
 from collections.abc import Callable
 
+
 def heal(target: str, power: int) -> str:
     return f"Heals restores {target} for {power} HP"
 
@@ -7,8 +8,9 @@ def heal(target: str, power: int) -> str:
 def fireball(target: str, power: int) -> str:
     return f"Fireball burns {target} for {power} damage"
 
+
 def condition(target: str, power: int) -> bool:
-    return power > 10
+    return power > 10 and target != "mage"
 
 
 def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
@@ -18,12 +20,13 @@ def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
 def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
     return lambda target, power: base_spell(target, power * multiplier)
 
+
 def conditional_caster(condition: Callable, spell: Callable) -> Callable:
     return lambda target, power: spell(target, power) if condition(target, power) else "Spell fizzled"
 
 
 def spell_sequence(spells: list[Callable]) -> Callable:
-    return lambda target, power: 
+    return lambda target, power: [spell(target, power) for spell in spells]
 
 
 combined = spell_combiner(fireball, heal)
@@ -39,5 +42,9 @@ using_spell = conditional_caster(condition, fireball)
 spell = using_spell("Dragon", 11)
 print(spell)
 
+spells = [heal, fireball]
 
-
+sequence_func = spell_sequence(spells)
+sequence = sequence_func("Dragon", 50)
+for element in sequence:
+    print(element)

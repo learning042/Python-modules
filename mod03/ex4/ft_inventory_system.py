@@ -15,6 +15,8 @@ def get_inventory(args: list[str]) -> dict[str, int]:
             print(f"Redundant item '{key}' - discarding")
         else:
             try:
+                if not key:
+                    raise ValueError("Empty key")
                 inventory[key] = int(value)
             except ValueError as error:
                 print(f"Quantity error for '{key}': {error}")
