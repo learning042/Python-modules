@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "learning042",email = "individualthinking1403@gmail.com"}
 ]
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "pandas (>=3.0.5,<4.0.0)",
     "numpy (>=2.5.3,<3.0.0)",

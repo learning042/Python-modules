@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 
-REQUIRED_CONFIG = (
+REQUIRED_CONFIGS = (
     "MATRIX_MODE",
     "DATABASE_URL",
     "API_KEY",
@@ -16,14 +16,6 @@ DEFAULT_CONFIGS = {
     "LOG_LEVEL": "DEBUG",
     "ZION_ENDPOINT": "https://zion.com/end_point"
 }
-
-
-PRODUCT_KEYS = (
-    "morpheus42",
-    "neo42",
-    "trinity42",
-    "42school"
-)
 
 
 def get_config(key: str) -> str | None:
@@ -55,15 +47,41 @@ def mask_key(api_key: str) -> str:
         return "[NOT SET]"
     if not is_valid_api_key_format(api_key):
         raise ValueError("Invalid key") 
-    return "*" * (len(api_key) - 4) + api_key[:-4]
+    return (
+        "Authenticated ("
+        "*" * (len(api_key) - 4) + api_key[:-4]
+        ")"
+        )
 
 
-def display_status(config: dict[str, str | None]) -> None:
+def display_warn_and_erros():
     ...
 
 
+def display_status(config: dict[str, str | None]) -> None:
+    print("ORACLE STATUS: Reading the Matrix...\n\n")
+    missing_keys = return_missing_keys(config)
+    if missing_keys:
+        print("[WARN] Missing configuration values:")
+        for key in missing_keys:
+            print(f"	{key}")
+        print()
+        if config["MATRIX_MODE"] == "production":
+            print("[ERROR] Production mode requires complete config.")
+    print(
+        "Configuration loaded:\n"
+        ""
+    )
+    
+    
+    
+    
+
+    
+    
+
+
 def main() -> None:
-    print("ORACLE STATUS: Reading the Matrix...")
     config = build_config()
     print(config)
 
