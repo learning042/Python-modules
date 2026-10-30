@@ -12,6 +12,8 @@ def get_inventory(args: list[str]) -> dict[str, int]:
         key = key.strip()
         value = value.strip()
         if key in inventory:
+            if key is None:
+                raise ValueError("Invalid key")
             print(f"Redundant item '{key}' - discarding")
         else:
             try:
