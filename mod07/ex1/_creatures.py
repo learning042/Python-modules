@@ -1,11 +1,10 @@
 from ex0.creatures import Creature
 from .capabilities import HealCapability, TransformCapability
-from typing import Any
 
 
 class Sproutling(Creature, HealCapability):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("Sproutling", "Grass", **kwargs)
+    def __init__(self) -> None:
+        super().__init__("Sproutling", "Grass")
 
     def attack(self) -> str:
         return f"{self._name} uses Vine Whip!"
@@ -17,8 +16,8 @@ class Sproutling(Creature, HealCapability):
 
 
 class Bloomelle(Creature, HealCapability):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("Bloomelle", "Grass/Fairy", **kwargs)
+    def __init__(self) -> None:
+        super().__init__("Bloomelle", "Grass/Fairy")
 
     def attack(self) -> str:
         return f"{self._name} uses Petal Dance!"
@@ -30,8 +29,8 @@ class Bloomelle(Creature, HealCapability):
 
 
 class Shiftling(Creature, TransformCapability):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("Shiftling", "Normal", **kwargs)
+    def __init__(self) -> None:
+        super().__init__("Shiftling", "Normal")
 
     def attack(self) -> str:
         if self._transformed:
@@ -48,8 +47,8 @@ class Shiftling(Creature, TransformCapability):
 
 
 class Morphagon(Creature, TransformCapability):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__("Morphagon", "Normal/Dragon", **kwargs)
+    def __init__(self) -> None:
+        super().__init__("Morphagon", "Normal/Dragon")
 
     def attack(self) -> str:
         if self._transformed:

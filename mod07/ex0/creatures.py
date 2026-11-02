@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Any
 
 
 class Creature(ABC):
-    def __init__(self, name: str, creature_type: str, **kwargs: Any) -> None:
+    def __init__(self, name: str, creature_type: str) -> None:
         self._name = name
         self._ctype = creature_type
-        super().__init__(**kwargs)
+        super().__init__()
 
     @abstractmethod
     def attack(self) -> str:

@@ -9,9 +9,9 @@ class HealCapability(ABC):
 
 
 class TransformCapability(ABC):
-    def __init__(self, **kwargs) -> None:
+    def __init__(self) -> None:
         self._transformed = False
-        super().__init__(**kwargs)
+        super().__init__()
 
     @abstractmethod
     def transform(self) -> str:
