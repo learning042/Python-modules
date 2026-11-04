@@ -55,7 +55,7 @@ class DefensiveStrategy(BattleStrategy):
 
     def act(self, creature: Creature) -> None:
         if not self.is_valid(creature):
-            raise ValueError(
+            raise InvalidStrategyError(
                 f"Invalid Creature '{creature._name}' for this "
                 "defensive strategy"
             )

@@ -13,22 +13,22 @@ def battle(opponents: list[tuple[CreatureFactory, BattleStrategy]]) -> None:
     size = len(opponents)
     print("*** Tournament ***")
     print(f"{size} opponents involved\n")
-    for i in range(size):
-        for j in range(i + 1, size):
-            print("* Battle *")
-            creature1 = opponents[i][0].create_base()
-            strategy1 = opponents[i][1]
-            creature2 = opponents[j][0].create_base()
-            strategy2 = opponents[j][1]
-            print(creature1.describe())
-            print(" vs.")
-            print(creature2.describe())
-            print(" now fight!")
-            try:
+    try:
+        for i in range(size):
+            for j in range(i + 1, size):
+                print("* Battle *")
+                creature1 = opponents[i][0].create_base()
+                strategy1 = opponents[i][1]
+                creature2 = opponents[j][0].create_base()
+                strategy2 = opponents[j][1]
+                print(creature1.describe())
+                print(" vs.")
+                print(creature2.describe())
+                print(" now fight!")
                 strategy1.act(creature1)
                 strategy2.act(creature2)
-            except InvalidStrategyError as error:
-                print(f"Battle error, aborting tournament: {error}")
+    except InvalidStrategyError as error:
+        print(f"Battle error, aborting tournament: {error}")
 
 
 def main() -> None:

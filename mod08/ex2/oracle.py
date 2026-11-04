@@ -18,72 +18,45 @@ DEFAULT_CONFIGS = {
 }
 
 
-def get_config(key: str) -> str | None:
-    load_dotenv()
-    return os.getenv(key, DEFAULT_CONFIGS.get(key))
-    
 
-def build_config() -> dict[str, str | None]:
+def mask_key(key: str) -> str:
+    if len(key) < 8:
+        raise ValueError("Invalid api key")
+    return "*" * (len(key) - 4) + key[-4:]
+
+
+def build_config(config_file: str) -> dict[str, str | None]:
+    load_dotenv(config_file)
     config = {}
-    for key in REQUIRED_CONFIG:
-        config[key] = get_config(key)
+    for key in REQUIRED_CONFIGS:
+        config[key] = os.getenv(key, DEFAULT_CONFIGS.get(key))
     return config
 
 
-def return_missing_keys(config: dict[str, str | None]) -> tuple[str, ...]:
-    return (key for key in config if config[key] is None)
+def show_missing_config(config: dict[str, str | None]) -> None:
+    for key in REQUIRED_CONFIGS:
+        if config[key] is None:
+            print(f"[UNSET-VALUE] {key}")
 
 
-def is_valid_api_key_format(api_key: str) -> bool:
-    if not api_key:
-        return False
-    elif len(key) < 8:
-        return False
-    return True
-
-
-def mask_key(api_key: str) -> str:
-    if not api_key:
-        return "[NOT SET]"
-    if not is_valid_api_key_format(api_key):
-        raise ValueError("Invalid key") 
-    return (
-        "Authenticated ("
-        "*" * (len(api_key) - 4) + api_key[:-4]
-        ")"
-        )
-
-
-def display_warn_and_erros():
-    ...
-
-
-def display_status(config: dict[str, str | None]) -> None:
-    print("ORACLE STATUS: Reading the Matrix...\n\n")
-    missing_keys = return_missing_keys(config)
-    if missing_keys:
-        print("[WARN] Missing configuration values:")
-        for key in missing_keys:
-            print(f"	{key}")
-        print()
-        if config["MATRIX_MODE"] == "production":
-            print("[ERROR] Production mode requires complete config.")
-    print(
-        "Configuration loaded:\n"
-        ""
-    )
-    
-    
-    
-    
+def print_config(config: dict[str, str | None]) -> None:
+    print(f"Mode: {config['MATRIX_MODE']}")
+    if config["MATRIX_MODE"] == "development":
+        print("Connected to local instance", end="")
+    elif config["MATRIX_MODE"] == "production":
+        print("Connected to online instance", end="")
+    print(" : {config['DATABASE_URL']}")
+    if config["API_KEY"]:
+        print(f"API Access: Authenticated {mask_key(config['API_KEY'])}")
+    else:
+        print(f"API Access: Unauthenticated")
+    print(f"Log level: {config['LOG_LEVEL']}")
+    print("Zion Network: Online")
 
     
-    
-
-
 def main() -> None:
-    config = build_config()
-    print(config)
+    config = build_config(".env.example")
+    print_config(config)
 
 
 if __name__ == "__main__":

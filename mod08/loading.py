@@ -79,9 +79,5 @@ def main() -> None:
     fig, axs = plt.subplots(2,2)
     
 
-    
-
 if __name__ == "__main__":
     main()
-
-    
