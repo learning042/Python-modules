@@ -35,10 +35,13 @@ def test_transformFactory(factory: TransformCreatureFactory) -> None:
 
 
 def main() -> None:
-    factory1 = HealingCreatureFactory()
-    test_healFactory(factory1)
-    factory2 = TransformCreatureFactory()
-    test_transformFactory(factory2)
+    try:
+        factory1 = HealingCreatureFactory()
+        test_healFactory(factory1)
+        factory2 = TransformCreatureFactory()
+        test_transformFactory(factory2)
+    except Exception as error:
+        print(error)
 
 
 if __name__ == "__main__":

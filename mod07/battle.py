@@ -36,11 +36,14 @@ def battle(
 
 
 def main() -> None:
-    factory1 = FlameFactory()
-    factory2 = AquaFactory()
-    test_factory(factory1)
-    test_factory(factory2)
-    battle(factory1, factory2)
+    try:
+        factory1 = FlameFactory()
+        factory2 = AquaFactory()
+        test_factory(factory1)
+        test_factory(factory2)
+        battle(factory1, factory2)
+    except Exception as error:
+        print(error)
 
 
 if __name__ == "__main__":
