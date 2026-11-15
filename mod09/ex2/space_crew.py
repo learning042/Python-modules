@@ -14,7 +14,7 @@ class Rank(Enum):
 
 class CrewMember(BaseModel):
     member_id: str = Field(min_length=3, max_length=10)
-    name:str = Field(min_length=2, max_length=50)
+    name: str = Field(min_length=2, max_length=50)
     rank: Rank
     age: int = Field(ge=18, le=80)
     specialization: str = Field(min_length=3, max_length=30)
@@ -36,12 +36,24 @@ class SpaceMission(BaseModel):
     def apply_mission_validation(self) -> Self:
         if not self.mission_id.startswith("M"):
             raise ValueError("Mission ID must start with 'M'")
-        if not any(member.rank in (Rank.commander, Rank.captain) for member in self.crew):
-            raise ValueError("Mission must have at least one Commander or Captain")
+        if not any(
+                member.rank in (Rank.commander, Rank.captain)
+                for member in self.crew
+        ):
+            raise ValueError(
+                    "Mission must have at least one Commander or Captain"
+            )
         if self.duration_days > 365:
-            experienced = sum(1 for member in self.crew if member.years_experience >= 5)
+            experienced = sum(
+                    1
+                    for member in self.crew
+                    if member.years_experience >= 5
+            )
             if experienced < len(self.crew) / 2:
-                raise ValueError("Long missions (> 365 days) need 50% experienced crew (5+ years)")
+                raise ValueError(
+                        "Long missions (> 365 days)"
+                        "need 50% experienced crew (5+ years)"
+                )
         if not all(member.is_active for member in self.crew):
             raise ValueError("All crew members must be active")
         return self
@@ -54,12 +66,14 @@ class SpaceMission(BaseModel):
             f"Duration: {self.duration_days} days\n"
             f"Budget: ${self.budget_millions}M\n"
             f"Crew size: {len(self.crew)}\n"
-            "Crew members:" 
+            "Crew members:"
         )
         for member in self.crew:
-            print(f"- {member.name} ({member.rank.value}) - {member.specialization}")
+            print(
+                    f"- {member.name} ({member.rank.value}) "
+                    "- {member.specialization}"
+            )
         print()
-        
 
 
 def main() -> None:
@@ -91,7 +105,6 @@ def main() -> None:
             specialization="Engineering",
             years_experience=6,
         )
-        
     ]
     valid_mission = SpaceMission(
         mission_id="M2024_MARS",

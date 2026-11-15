@@ -1,6 +1,7 @@
 import sys
 from types import ModuleType
 from importlib import import_module
+from typing import Any
 
 
 class Dependency:
@@ -10,7 +11,7 @@ class Dependency:
         self.obj: None | ModuleType = None
         self.use = use_case
 
-        
+
 DEPENDENCIES = {
     "pandas": Dependency("pandas", "Data manipulation"),
     "numpy": Dependency("numpy", "Numerical computation"),
@@ -39,10 +40,16 @@ def show_import_status(modules: dict[str, Dependency]) -> None:
     all_ok = True
     for module in modules.values():
         if module.obj is None:
-            print(f"[KO] {module.pkg_name} ({module.version}) - {module.use} not ready")
+            print(
+                    f"[KO] {module.pkg_name} ({module.version}) "
+                    f"- {module.use} not ready"
+            )
             all_ok = False
         else:
-            print(f"[OK] {module.pkg_name} ({module.version}) - {module.use} ready")
+            print(
+                    f"[OK] {module.pkg_name} ({module.version}) "
+                    "- {module.use} ready"
+            )
     if not all_ok:
         print(
             "\nThere are missing dependencies.\n"
@@ -57,16 +64,18 @@ def show_import_status(modules: dict[str, Dependency]) -> None:
         sys.exit(1)
 
 
-def generate_matrix_data(low: float, high: float, size: tuple[int, int, ...]) -> np.ndarray: 
+def generate_matrix_data(low: float, high: float, size: int) -> Any:
+    assert isinstance(np, ModuleType)
     return np.random.randint(low, high, size)
 
 
-def generate_data_image(dataset: np.ndarray) -> None:
+def generate_data_image(dataset: Any) -> None:
+    assert isinstance(pd, ModuleType) and isinstance(plt, ModuleType)
     print("Analyzing Matrix data...")
     length = len(dataset)
     df = pd.DataFrame(dataset)
     print(f"Processing {length} data points...")
-    fig, axs = plt.subplots(2,1)
+    fig, axs = plt.subplots(2, 1)
     axs[0].plot(df.index, df, label="graph")
     axs[0].set_xlabel("individual")
     axs[0].set_ylabel("power")
@@ -78,7 +87,7 @@ def generate_data_image(dataset: np.ndarray) -> None:
     axs[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25))
     plt.tight_layout()
     plt.savefig("matrix_analysis.png", bbox_inches="tight")
-            
+
 
 def main() -> None:
     global pd
@@ -91,7 +100,7 @@ def main() -> None:
     plt = DEPENDENCIES["matplotlib.pyplot"].obj
     dataset = generate_matrix_data(low=0, high=100, size=1000)
     generate_data_image(dataset)
-    
+
 
 if __name__ == "__main__":
     main()

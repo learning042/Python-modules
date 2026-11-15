@@ -26,6 +26,11 @@ def main() -> None:
         is_operational=False,
         last_maintenance=datetime.now(),
     )
+    operational_status = (
+            'Operational'
+            if space_station.is_operational
+            else 'Not operational'
+    )
     print(
         "Valid station created:\n"
         f"ID: {space_station.station_id}\n"
@@ -33,7 +38,7 @@ def main() -> None:
         f"Crew: {space_station.crew_size} people\n"
         f"Power: {space_station.power_level}%\n"
         f"Oxygen: {space_station.oxygen_level}%\n"
-        f"Status: {'Operational' if space_station.is_operational else 'Not operational'}\n"
+        f"Status: {operational_status}\n"
     )
     print("=" * 40)
     try:
@@ -46,6 +51,11 @@ def main() -> None:
             is_operational=False,
             last_maintenance=datetime.now(),
         )
+        operational_status = (
+            'Operational'
+            if space_station.is_operational
+            else 'Not operational'
+        )
         print(
             "Valid station created:\n"
             f"ID: {space_station.station_id}\n"
@@ -53,8 +63,8 @@ def main() -> None:
             f"Crew: {space_station.crew_size} people\n"
             f"Power: {space_station.power_level}%\n"
             f"Oxygen: {space_station.oxygen_level}%\n"
-            f"Status: {'Operational' if space_station.is_operational else 'Not operational'}\n"
-        )	
+            f"Status: {operational_status}\n"
+        )
     except ValidationError as e:
         print("Expected validation error:")
         for error in e.errors():

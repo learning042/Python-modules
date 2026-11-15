@@ -28,10 +28,17 @@ class AlienContact(BaseModel):
             raise ValueError("Contact ID must start with 'AC'(Alien Contact)")
         if self.contact_type == ContactType.physical and not self.is_verified:
             raise ValueError("Physical contact reports must be verified")
-        if self.contact_type == ContactType.telepathic and self.witness_count < 3:
-            raise ValueError("Telepathic contact requires at least 3 witnesses")
+        if (
+                self.contact_type == ContactType.telepathic
+                and self.witness_count < 3
+        ):
+            raise ValueError(
+                    "Telepathic contact requires at least 3 witnesses"
+            )
         if self.signal_strength > 7.0 and self.message_received is None:
-            raise ValueError("Strong signals (> 7.0) should include received messages")
+            raise ValueError(
+                    "Strong signals (> 7.0) should include received messages"
+            )
         return self
 
     def print_contact_details(self) -> None:
@@ -54,7 +61,7 @@ def main() -> None:
         contact_id="AC_2024_001",
         timestamp=datetime.now(),
         location="Area 51, Nevada",
-        contact_type="radio",
+        contact_type=ContactType.radio,
         signal_strength=8.5,
         duration_minutes=45,
         witness_count=5,
@@ -64,14 +71,14 @@ def main() -> None:
     print("=" * 40)
     try:
         invalid_contact = AlienContact(
-        contact_id="AC_2024_001",
-        timestamp=datetime.now(),
-        location="Area 51, Nevada",
-        contact_type="telepathic",
-        signal_strength=8.5,
-        duration_minutes=45,
-        witness_count=2,
-        message_received="Greetings from Zeta Reticuli"
+            contact_id="AC_2024_001",
+            timestamp=datetime.now(),
+            location="Area 51, Nevada",
+            contact_type=ContactType.telepathic,
+            signal_strength=8.5,
+            duration_minutes=45,
+            witness_count=2,
+            message_received="Greetings from Zeta Reticuli"
         )
         invalid_contact.print_contact_details()
     except ValidationError as e:
@@ -82,8 +89,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-
-    
-    
