@@ -49,7 +49,7 @@ class AlienContact(BaseModel):
             f"Signal: {self.signal_strength}/10\n"
             f"Duration: {self.duration_minutes} minutes\n"
             f"Witnesses: {self.witness_count}\n"
-            f"Message: {self.message_received}\n"
+            f"Message: '{self.message_received}'\n"
         )
 
 
@@ -84,7 +84,7 @@ def main() -> None:
     except ValidationError as e:
         print("Expected validation error:")
         for error in e.errors():
-            print(error["msg"])
+            print(error["msg"].removeprefix("Value error, "))
 
 
 if __name__ == "__main__":

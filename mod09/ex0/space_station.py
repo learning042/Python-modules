@@ -23,7 +23,6 @@ def main() -> None:
         crew_size=6,
         power_level=85.5,
         oxygen_level=92.3,
-        is_operational=False,
         last_maintenance=datetime.now(),
     )
     operational_status = (
