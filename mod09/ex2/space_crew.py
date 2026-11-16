@@ -35,6 +35,9 @@ class SpaceMission(BaseModel):
     def apply_mission_validation(self) -> "SpaceMission":
         if not self.mission_id.startswith("M"):
             raise ValueError("Mission ID must start with 'M'")
+        ids = [member.member_id for member in self.crew]
+        if len(ids) != len(set(ids)):
+            raise ValueError("Crew member IDs must be unique")
         if not any(
                 member.rank in (Rank.commander, Rank.captain)
                 for member in self.crew
@@ -81,7 +84,7 @@ def main() -> None:
     print("Valid mission created:")
     valid_crew = [
         CrewMember(
-            member_id="Hello",
+            member_id="CM00",
             name="Sarah Connor",
             rank=Rank.commander,
             age=18,
@@ -89,7 +92,7 @@ def main() -> None:
             years_experience=6,
         ),
         CrewMember(
-            member_id="Hello",
+            member_id="CM01",
             name="John Smith",
             rank=Rank.lieutenant,
             age=18,
@@ -97,7 +100,7 @@ def main() -> None:
             years_experience=6,
         ),
         CrewMember(
-            member_id="Hello",
+            member_id="CM02",
             name="Alice Johnson",
             rank=Rank.officer,
             age=18,
@@ -119,7 +122,7 @@ def main() -> None:
     try:
         invalid_crew = [
             CrewMember(
-                member_id="Hello",
+                member_id="CM00",
                 name="Sarah Connor",
                 rank=Rank.lieutenant,
                 age=18,
@@ -127,7 +130,7 @@ def main() -> None:
                 years_experience=6,
             ),
             CrewMember(
-                member_id="Hello",
+                member_id="CM01",
                 name="John Smith",
                 rank=Rank.lieutenant,
                 age=18,
@@ -135,7 +138,7 @@ def main() -> None:
                 years_experience=6,
             ),
             CrewMember(
-                member_id="Hello",
+                member_id="CM02",
                 name="Alice Johnson",
                 rank=Rank.officer,
                 age=18,
@@ -156,7 +159,7 @@ def main() -> None:
     except ValidationError as e:
         print("Expected validation error:")
         for error in e.errors():
-            print(error["msg"])
+            print(error["msg"].removeprefix("Value error, "))
 
 
 if __name__ == "__main__":

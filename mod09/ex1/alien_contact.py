@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field, ValidationError, model_validator
-from typing import Optional
 from datetime import datetime
 from enum import Enum
 
@@ -19,13 +18,13 @@ class AlienContact(BaseModel):
     signal_strength: float = Field(ge=0.0, le=10.0)
     duration_minutes: int = Field(ge=1, le=1440)
     witness_count: int = Field(ge=1, le=100)
-    message_received: Optional[str] = Field(default=None, max_length=500)
+    message_received: str | None = Field(default=None, max_length=500)
     is_verified: bool = False
 
     @model_validator(mode="after")
     def check_business_rules(self) -> "AlienContact":
         if not self.contact_id.startswith("AC"):
-            raise ValueError("Contact ID must start with 'AC'(Alien Contact)")
+            raise ValueError("Contact ID must start with 'AC' (Alien Contact)")
         if self.contact_type == ContactType.physical and not self.is_verified:
             raise ValueError("Physical contact reports must be verified")
         if (
