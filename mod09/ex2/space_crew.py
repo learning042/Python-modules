@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field, model_validator, ValidationError
 from enum import Enum
-from typing import Self
 from datetime import datetime
 
 
@@ -33,7 +32,7 @@ class SpaceMission(BaseModel):
     budget_millions: float = Field(ge=1.0, le=10000.0)
 
     @model_validator(mode="after")
-    def apply_mission_validation(self) -> Self:
+    def apply_mission_validation(self) -> "SpaceMission":
         if not self.mission_id.startswith("M"):
             raise ValueError("Mission ID must start with 'M'")
         if not any(

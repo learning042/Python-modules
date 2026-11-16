@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, ValidationError, model_validator
-from typing import Optional, Self
+from typing import Optional
 from datetime import datetime
 from enum import Enum
 
@@ -23,7 +23,7 @@ class AlienContact(BaseModel):
     is_verified: bool = False
 
     @model_validator(mode="after")
-    def check_business_rules(self) -> Self:
+    def check_business_rules(self) -> "AlienContact":
         if not self.contact_id.startswith("AC"):
             raise ValueError("Contact ID must start with 'AC'(Alien Contact)")
         if self.contact_type == ContactType.physical and not self.is_verified:
