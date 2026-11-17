@@ -36,8 +36,9 @@ def import_all(modules: dict[str, Dependency]) -> None:
 
 
 def show_import_status(modules: dict[str, Dependency]) -> None:
-    print("Loading status: Loading programs...\n")
+    print("LOADING STATUS: Loading programs...\n")
     all_ok = True
+    print("Checking dependencies:")
     for module in modules.values():
         if module.obj is None:
             print(
@@ -48,7 +49,7 @@ def show_import_status(modules: dict[str, Dependency]) -> None:
         else:
             print(
                     f"[OK] {module.pkg_name} ({module.version}) "
-                    "- {module.use} ready"
+                    f"- {module.use} ready"
             )
     if not all_ok:
         print(
@@ -69,24 +70,27 @@ def generate_matrix_data(low: float, high: float, size: int) -> Any:
     return np.random.randint(low, high, size)
 
 
-def generate_data_image(dataset: Any) -> None:
+def generate_data_image(dataset: Any, filename: str) -> None:
     assert isinstance(pd, ModuleType) and isinstance(plt, ModuleType)
-    print("Analyzing Matrix data...")
+    print("\nAnalyzing Matrix data...")
     length = len(dataset)
     df = pd.DataFrame(dataset)
     print(f"Processing {length} data points...")
     fig, axs = plt.subplots(2, 1)
     axs[0].plot(df.index, df, label="graph")
-    axs[0].set_xlabel("individual")
-    axs[0].set_ylabel("power")
+    axs[0].set_xlabel("index")
+    axs[0].set_ylabel("value")
     axs[0].legend()
     axs[0].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25))
     axs[1].scatter(df.index, df, alpha=0.4, s=15, label="dispersion")
-    axs[1].set_xlabel("individual")
-    axs[1].set_ylabel("power")
+    axs[1].set_xlabel("Index")
+    axs[1].set_ylabel("Value")
     axs[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25))
     plt.tight_layout()
-    plt.savefig("matrix_analysis.png", bbox_inches="tight")
+    print("Generating visualization...")
+    plt.savefig(filename, bbox_inches="tight")
+    print("\nAnalysis complete!")
+    print(f"Results saved to: {filename}")
 
 
 def main() -> None:
@@ -98,8 +102,8 @@ def main() -> None:
     pd = DEPENDENCIES["pandas"].obj
     np = DEPENDENCIES["numpy"].obj
     plt = DEPENDENCIES["matplotlib.pyplot"].obj
-    dataset = generate_matrix_data(low=0, high=100, size=1000)
-    generate_data_image(dataset)
+    dataset = generate_matrix_data(low=0, high=1000, size=100)
+    generate_data_image(dataset, "matrix_analysis.png")
 
 
 if __name__ == "__main__":

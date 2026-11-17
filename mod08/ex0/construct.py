@@ -9,7 +9,7 @@ def is_in_venv() -> bool:
 
 def get_sitepkg_path(env_name: str) -> str | None:
     for path in site.getsitepackages():
-        if env_name in path and "lib64" not in path:
+        if env_name in path:
             return path
     return None
 
@@ -17,7 +17,7 @@ def get_sitepkg_path(env_name: str) -> str | None:
 def print_not_in_venv_msg() -> None:
     curr_python = sys.executable
     print(
-        "MATRIX STATUS: You're still plugged in\n"
+        "MATRIX STATUS: You're still plugged in\n\n"
         f"Current Python: {curr_python}\n"
         "Virtual Environment: None detected\n\n"
         "Warning: You're in the global environment!\n"
@@ -38,6 +38,7 @@ def print_in_venv_msg() -> None:
         "MATRIX STATUS: Welcome to the construct\n"
         f"Current Python: {curr_python}\n"
         f"Virtual Environment: {env_name}\n"
+        f"Environment Path: {sys.prefix}\n\n"
         "SUCCESS: You're in an isolated environment!\n"
         "Safe to install packages without affecting\n"
         "the global system.\n\n"

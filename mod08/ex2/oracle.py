@@ -90,9 +90,9 @@ def display_security_checks(config: dict) -> None:
     else:
         print("[OK] .env file properly configured")
     if SHELL_WINS:
-        print(f"[OK] {config["MATRIX_MODE"]} overrides available")
+        print(f"[OK] {config['MATRIX_MODE']} overrides available")
     else:
-        print(f"[KO] {config["MATRIX_MODE"]} overrides unavailable")
+        print(f"[KO] {config['MATRIX_MODE']} overrides unavailable")
 
 
 def main() -> None:
@@ -115,7 +115,7 @@ def main() -> None:
         f"Mode: {mode}\n"
         f"Database: {get_database_status(config)}\n"
         f"API Access: {api_status}\n"
-        f"Log Level: {config["LOG_LEVEL"]}\n"
+        f"Log Level: {config['LOG_LEVEL']}\n"
         f"Zion Network: online\n"
     )
     print("Environment security check:")
