@@ -18,34 +18,38 @@ DEFAULT = {
 }
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ENV_FILE = os.path.join(BASE_DIR, ".env")
+GITIGNORE_FILE = os.path.join(BASE_DIR, ".gitignore")
+
+
 SHELL_WINS = True
 
 
 def load_config() -> tuple[dict[str, str | None], list[str]]:
-    load_dotenv(override=not SHELL_WINS)
+    load_dotenv(ENV_FILE, override=not SHELL_WINS)
     config = {}
     missing = []
     for key in REQUIRED:
-        value = os.getenv(key)
+        value = os.getenv(key, DEFAULT.get(key))
         if not value:
             missing.append(key)
-            value = DEFAULT.get(key)
         config[key] = value
     return (config, missing)
 
 
 def check_api(key: str | None) -> bool:
-    if not key or len(key) < 8:
-        return False
-    return True
+    return bool(key and len(key) >= 8)
 
 
-def get_database_status(config: dict) -> str:
+def get_database_status(
+        config: dict[str, str | None]
+        ) -> str:
     url = config["DATABASE_URL"]
     if not url:
         return "Not set"
     elif config["MATRIX_MODE"] == "development":
-        return "Connected to local instance"
+        return "Local instance configured"
     return "Connected to online instance"
 
 
@@ -66,12 +70,14 @@ def has_hardcoding(config: dict) -> bool:
 
 def has_leaked_secret(config: dict) -> bool:
     try:
-        with open(".gitignore", "r") as f:
-            content = f.read()
+        with open(GITIGNORE_FILE, "r") as f:
+            lines = [line.strip() for line in f]
+    except FileNotFoundError:
+        return True
     except OSError as error:
         print(error, file=sys.stderr)
         sys.exit(1)
-    return ".env" not in content
+    return not any(line == ".env" for line in lines)
 
 
 def display_security_checks(config: dict) -> None:
@@ -79,16 +85,16 @@ def display_security_checks(config: dict) -> None:
         print("[OK] No hardcoded secrets detected")
     else:
         print("[KO] There is/are hardcoded setting(s)")
-    if not os.path.isfile(".env"):
+    if not os.path.isfile(ENV_FILE):
         print("[KO] .env file does not exist")
     elif has_leaked_secret(config):
         print("[KO] .env is not in .gitignore")
     else:
         print("[OK] .env file properly configured")
     if SHELL_WINS:
-        print(f"[OK] {config['MATRIX_MODE']} overrides available")
+        print("[OK] Shell environment overrides .env")
     else:
-        print(f"[KO] {config['MATRIX_MODE']} overrides unavailable")
+        print("[OK] .env overrides shell environment")
 
 
 def main() -> None:
@@ -99,12 +105,14 @@ def main() -> None:
     mode = config["MATRIX_MODE"]
     if mode not in ("development", "production"):
         print(f"[ERROR] Invalid matrix mode: {mode}", file=sys.stderr)
+        print("Error, exiting...")
         sys.exit(1)
     if mode == "production" and missing:
         print(
                 "[ERROR] Production mode requires all variables set",
                 file=sys.stderr
         )
+        print("Error, exiting...")
         sys.exit(1)
     api_status = (
             "Authenticated"
@@ -120,6 +128,7 @@ def main() -> None:
         f"Zion Network: {'Online' if config['ZION_ENDPOINT'] else 'Offline'}\n"
     )
     print("Environment security check:")
+    config["API_KEY"] = "abc"
     display_security_checks(config)
     print("\nThe Oracle sees all configurations")
 

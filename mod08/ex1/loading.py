@@ -72,6 +72,7 @@ def show_pip_vs_poetry() -> None:
             "Poetry : pyproject.toml + poetyr.lock. manages its own venv"
     )
 
+
 def generate_matrix_data(low: int, high: int, size: int) -> Any:
     assert isinstance(np, ModuleType)
     return np.random.randint(low, high, size)
