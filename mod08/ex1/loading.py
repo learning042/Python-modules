@@ -65,7 +65,14 @@ def show_import_status(modules: dict[str, Dependency]) -> None:
         sys.exit(1)
 
 
-def generate_matrix_data(low: float, high: float, size: int) -> Any:
+def show_pip_vs_poetry() -> None:
+    print(
+            "\nDependency management:\n"
+            "pip    : requirements.txt, install what is listed\n"
+            "Poetry : pyproject.toml + poetyr.lock. manages its own venv"
+    )
+
+def generate_matrix_data(low: int, high: int, size: int) -> Any:
     assert isinstance(np, ModuleType)
     return np.random.randint(low, high, size)
 
@@ -80,7 +87,6 @@ def generate_data_image(dataset: Any, filename: str) -> None:
     axs[0].plot(df.index, df, label="graph")
     axs[0].set_xlabel("index")
     axs[0].set_ylabel("value")
-    axs[0].legend()
     axs[0].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25))
     axs[1].scatter(df.index, df, alpha=0.4, s=15, label="dispersion")
     axs[1].set_xlabel("Index")
@@ -99,6 +105,7 @@ def main() -> None:
     global plt
     import_all(DEPENDENCIES)
     show_import_status(DEPENDENCIES)
+    show_pip_vs_poetry()
     pd = DEPENDENCIES["pandas"].obj
     np = DEPENDENCIES["numpy"].obj
     plt = DEPENDENCIES["matplotlib.pyplot"].obj

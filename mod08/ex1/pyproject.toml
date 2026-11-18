@@ -3,7 +3,7 @@ name = "ex1"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "",email = "individualthinking1403@gmail.com"}
+    {name = "tpinto-v",email = "tpinto-v@student.42lisboa.com"}
 ]
 requires-python = ">=3.10"
 dependencies = [

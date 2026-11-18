@@ -23,9 +23,9 @@ def print_not_in_venv_msg() -> None:
         "Warning: You're in the global environment!\n"
         "The machines can see everything you install.\n\n"
         "To enter the construct, run:\n"
-        "python -m venv matrix_venv\n"
+        "python -m venv matrix_env\n"
         "source matrix_env/bin/activate # On Unix\n"
-        "matrix_env/Scripts/activate # On Windows\n\n"
+        "matrix_env\\Scripts\\activate # On Windows\n\n"
         "Then run this program again."
     )
 
@@ -35,7 +35,7 @@ def print_in_venv_msg() -> None:
     curr_python = sys.executable
     pkg_path = get_sitepkg_path(env_name)
     print(
-        "MATRIX STATUS: Welcome to the construct\n"
+        "MATRIX STATUS: Welcome to the construct\n\n"
         f"Current Python: {curr_python}\n"
         f"Virtual Environment: {env_name}\n"
         f"Environment Path: {sys.prefix}\n\n"

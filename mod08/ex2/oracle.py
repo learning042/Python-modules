@@ -21,7 +21,7 @@ DEFAULT = {
 SHELL_WINS = True
 
 
-def load_config() -> tuple[dict, list]:
+def load_config() -> tuple[dict[str, str | None], list[str]]:
     load_dotenv(override=not SHELL_WINS)
     config = {}
     missing = []
@@ -32,10 +32,6 @@ def load_config() -> tuple[dict, list]:
             value = DEFAULT.get(key)
         config[key] = value
     return (config, missing)
-
-
-def mask_key(key: str) -> str:
-    return "*" * (len(key) - 4) + key[-4:]
 
 
 def check_api(key: str | None) -> bool:
@@ -102,11 +98,16 @@ def main() -> None:
         print(f"[UNSET] {key}")
     mode = config["MATRIX_MODE"]
     if mode not in ("development", "production"):
-        raise ValueError(f"[ERROR] Invalid matrix mode: {mode}")
+        print(f"[ERROR] Invalid matrix mode: {mode}", file=sys.stderr)
+        sys.exit(1)
     if mode == "production" and missing:
-        raise ValueError("[ERROR] Production mode requires all variables set")
+        print(
+                "[ERROR] Production mode requires all variables set",
+                file=sys.stderr
+        )
+        sys.exit(1)
     api_status = (
-            "authenticated"
+            "Authenticated"
             if check_api(config["API_KEY"])
             else "Unauthenticated"
     )
@@ -116,11 +117,11 @@ def main() -> None:
         f"Database: {get_database_status(config)}\n"
         f"API Access: {api_status}\n"
         f"Log Level: {config['LOG_LEVEL']}\n"
-        f"Zion Network: online\n"
+        f"Zion Network: {'Online' if config['ZION_ENDPOINT'] else 'Offline'}\n"
     )
     print("Environment security check:")
     display_security_checks(config)
-    print("\nThe oracle sees all configurations")
+    print("\nThe Oracle sees all configurations")
 
 
 if __name__ == "__main__":
