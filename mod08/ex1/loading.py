@@ -24,13 +24,11 @@ plt: None | ModuleType = None
 
 
 def import_all(modules: dict[str, Dependency]) -> None:
-    for module in modules.keys():
+    for module, dependency in modules.items():
         try:
-            dependency = modules[module]
-            dependency.obj = import_module(dependency.pkg_name)
-            dependency.version = dependency.obj.__version__
-            if module == "matplotlib.pyplot":
-                dependency.obj = import_module(module)
+            pkg = import_module(dependency.pkg_name)
+            dependency.version = pkg.__version__
+            dependency.obj = import_module(module)
         except ImportError:
             continue
 
@@ -67,9 +65,17 @@ def show_import_status(modules: dict[str, Dependency]) -> None:
 
 def show_pip_vs_poetry() -> None:
     print(
-            "\nDependency management:\n"
-            "pip    : requirements.txt, install what is listed\n"
-            "Poetry : pyproject.toml + poetyr.lock. manages its own venv"
+        "\nDependency management:\n\n"
+        "pip:\n"
+        "  - Installs packages into the active environment\n"
+        "  - Dependencies are listed in requirements.txt\n"
+        "  - Does not create a virtual environment by itself\n"
+        "  - No lock file: versions can differ between machines\n\n"
+        "Poetry:\n"
+        "  - Manages dependencies and the virtual environment together\n"
+        "  - Dependencies are listed in pyproject.toml\n"
+        "  - poetry.lock pins exact versions (reproducible installs)\n"
+        "  - Resolves version conflicts before installing"
     )
 
 
@@ -85,17 +91,18 @@ def generate_data_image(dataset: Any, filename: str) -> None:
     df = pd.DataFrame(dataset)
     print(f"Processing {length} data points...")
     fig, axs = plt.subplots(2, 1)
-    axs[0].plot(df.index, df, label="graph")
+    axs[0].plot(df.index, df.values, label="graph")
     axs[0].set_xlabel("index")
     axs[0].set_ylabel("value")
     axs[0].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25))
-    axs[1].scatter(df.index, df, alpha=0.4, s=15, label="dispersion")
+    axs[1].scatter(df.index, df.values, alpha=0.4, s=15, label="dispersion")
     axs[1].set_xlabel("Index")
     axs[1].set_ylabel("Value")
     axs[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.25))
     plt.tight_layout()
     print("Generating visualization...")
     plt.savefig(filename, bbox_inches="tight")
+    plt.close(fig)
     print("\nAnalysis complete!")
     print(f"Results saved to: {filename}")
 
@@ -106,12 +113,12 @@ def main() -> None:
     global plt
     import_all(DEPENDENCIES)
     show_import_status(DEPENDENCIES)
-    show_pip_vs_poetry()
     pd = DEPENDENCIES["pandas"].obj
     np = DEPENDENCIES["numpy"].obj
     plt = DEPENDENCIES["matplotlib.pyplot"].obj
     dataset = generate_matrix_data(low=0, high=1000, size=100)
     generate_data_image(dataset, "matrix_analysis.png")
+    show_pip_vs_poetry()
 
 
 if __name__ == "__main__":

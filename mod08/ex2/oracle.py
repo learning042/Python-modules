@@ -49,7 +49,7 @@ def get_database_status(
     if not url:
         return "Not set"
     elif config["MATRIX_MODE"] == "development":
-        return "Local instance configured"
+        return "Connected to local instance"
     return "Connected to online instance"
 
 
@@ -128,7 +128,6 @@ def main() -> None:
         f"Zion Network: {'Online' if config['ZION_ENDPOINT'] else 'Offline'}\n"
     )
     print("Environment security check:")
-    config["API_KEY"] = "abc"
     display_security_checks(config)
     print("\nThe Oracle sees all configurations")
 

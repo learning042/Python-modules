@@ -20,7 +20,7 @@ def print_not_in_venv_msg() -> None:
         "MATRIX STATUS: You're still plugged in\n\n"
         f"Current Python: {curr_python}\n"
         "Virtual Environment: None detected\n\n"
-        "Warning: You're in the global environment!\n"
+        "WARNING: You're in the global environment!\n"
         "The machines can see everything you install.\n\n"
         "To enter the construct, run:\n"
         "python -m venv matrix_env\n"
