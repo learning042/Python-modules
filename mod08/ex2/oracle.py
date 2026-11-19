@@ -53,7 +53,7 @@ def get_database_status(
     return "Connected to online instance"
 
 
-def has_hardcoding(config: dict) -> bool:
+def has_hardcoding(config: dict[str, str | None]) -> bool:
     try:
         with open(__file__, "r") as f:
             source = f.read()
@@ -68,7 +68,7 @@ def has_hardcoding(config: dict) -> bool:
     return any(s and s in source for s in secrets)
 
 
-def has_leaked_secret(config: dict) -> bool:
+def has_leaked_secret(config: dict[str, str | None]) -> bool:
     try:
         with open(GITIGNORE_FILE, "r") as f:
             lines = [line.strip() for line in f]
@@ -80,7 +80,7 @@ def has_leaked_secret(config: dict) -> bool:
     return not any(line == ".env" for line in lines)
 
 
-def display_security_checks(config: dict) -> None:
+def display_security_checks(config: dict[str, str | None]) -> None:
     if not has_hardcoding(config):
         print("[OK] No hardcoded secrets detected")
     else:

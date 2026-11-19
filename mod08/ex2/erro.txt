@@ -1,1 +1,0 @@
-[ERROR] Production mode requires all variables set
